@@ -1,201 +1,273 @@
-import numpy as np                                                    # import numpy library
+# Import numpy library for matrix operations
+import numpy as np
 
+# Function to take rows and columns of matrix
+def get_size(name):
 
-ALLOWED = {1, 2, 3, 4}                                               # allowed sizes for manual input
+    # Display matrix name
+    print(f"\nMatrix {name}")
 
+    # Keep asking until valid input
+    while True:
 
-def create_matrix(name):                                              # function to create matrix
+        try:
 
-    print(f"\nMatrix {name}")                                         # print matrix name
+            # Take rows input as string
+            r = input("Rows: ")
 
+            # Take columns input as string
+            c = input("Columns: ")
 
-    while True:                                                       # loop until valid row input
-        try:                                                          # try to get row input
-            r = input("Enter number of rows: ").strip()              # take row input and strip spaces
+            # Check if input is empty or decimal value
+            if "." in r or "." in c or r == "" or c == "":
 
-            if not r:                                                 # check if input is empty
-                print("Incorrect input")                             # print error message
-                continue                                             # ask again
+                # Show error message
+                print("Incorrect input")
 
-            if "." in r:                                             # check if input is decimal
-                print("Incorrect input")                             # print error message
-                continue                                             # ask again
+                # Restart loop
+                continue
 
-            rows = int(r)                                            # convert to integer
-            break                                                    # exit loop if valid
+            # Convert rows string into integer
+            r = int(r)
 
-        except ValueError:                                           # if conversion fails
-            print("Incorrect input")                                 # print error message
+            # Convert columns string into integer
+            c = int(c)
 
+            # Check rows and columns are positive
+            if r <= 0 or c <= 0:
 
-    while True:                                                      # loop until valid column input
-        try:                                                         # try to get column input
-            c = input("Enter number of columns: ").strip()          # take column input and strip spaces
+                # Show error
+                print("Incorrect input")
 
-            if not c:                                                # check if input is empty
-                print("Incorrect input")                            # print error message
-                continue                                            # ask again
+                # Restart loop
+                continue
 
-            if "." in c:                                            # check if input is decimal
-                print("Incorrect input")                            # print error message
-                continue                                            # ask again
+            # Return valid rows and columns
+            return r, c
 
-            cols = int(c)                                           # convert to integer
-            break                                                   # exit loop if valid
+        # Runs when conversion fails
+        except ValueError:
 
-        except ValueError:                                          # if conversion fails
-            print("Incorrect input")                                # print error message
+            # Show error message
+            print("Incorrect input")
 
+# Function to create matrix
+def create_matrix(name, r, c):
 
-    if rows in ALLOWED and cols in ALLOWED:                         # check if size is within 1-4
+    # Check matrix size
+    # If rows and columns are <=4 then take manual input
+    if r <= 4 and c <= 4:
 
-        matrix = []                                                 # create empty matrix
+        # Display matrix name
+        print(f"\nEnter Matrix {name}")
 
-        print(f"Enter elements for Matrix {name} (one value per line):")  # prompt for elements
+        # Create empty list for storing matrix
+        data = []
 
-        for i in range(rows):                                       # loop through each row
+        # Loop for rows
+        for i in range(r):
 
-            print(f"  Row {i + 1}:")                               # print current row number
+            # Create empty row
+            row = []
 
-            row = []                                                # create empty row
+            # Loop for columns
+            for j in range(c):
 
-            for j in range(cols):                                   # loop through each column
+                # Keep asking until correct value
+                while True:
 
-                while True:                                         # loop until valid element input
-                    try:                                            # try to get element input
-                        value = input(f"    Column {j + 1}: ").strip()   # take element input
+                    try:
 
-                        if not value:                               # check if input is empty
-                            print("    Please enter a value")      # print error message
-                            continue                               # ask again
+                        # Take element input
+                        value = int(input(f"Row {i+1} Col {j+1}: "))
 
-                        value = int(value)                         # convert to integer
-                        row.append(value)                          # add value to row
-                        break                                      # exit loop if valid
+                        # Add value into row
+                        row.append(value)
 
-                    except ValueError:                             # if conversion fails
-                        print("    Enter integer value only")      # print error message
+                        # Stop input loop
+                        break
 
-            matrix.append(row)                                     # add completed row to matrix
+                    # If user enters non-integer
+                    except ValueError:
 
-        return np.array(matrix), rows, cols                        # return matrix and dimensions
+                        # Display error
+                        print("Enter integer only")
 
+            # Add completed row into matrix
+            data.append(row)
 
-    else:                                                           # if size exceeds 1-4
+        # Convert list into numpy array
+        return np.array(data)
 
-        print(f"\nMatrix size {rows}x{cols} is too large for manual input.")   # print message
-        print("Switching to random fill.")                         # inform user about random fill
+    # If matrix size is greater than 4x4
+    else:
 
-        while True:                                                # loop until valid min input
-            try:                                                   # try to get min input
-                low = input("Enter min value: ").strip()          # take min value input
+        # Inform user
+        print("Size greater than 4x4, random values generated")
 
-                if not low:                                        # check if input is empty
-                    print("Incorrect input")                       # print error message
-                    continue                                       # ask again
+        # Take minimum random value
+        low = int(input("Minimum value: "))
 
-                low = int(low)                                     # convert to integer
-                break                                              # exit loop if valid
+        # Take maximum random value
+        high = int(input("Maximum value: ") )
 
-            except ValueError:                                     # if conversion fails
-                print("Incorrect input")                           # print error message
+        # Generate random matrix
+        return np.random.randint(
+            low,
+            high + 1,
+            (r,c)
+        )
 
-        while True:                                                # loop until valid max input
-            try:                                                   # try to get max input
-                high = input("Enter max value: ").strip()         # take max value input
+# Loop for checking matrix sizes
+while True:
 
-                if not high:                                       # check if input is empty
-                    print("Incorrect input")                       # print error message
-                    continue                                       # ask again
+    # Run loop maximum 3 times
+    for i in range(3):
 
-                high = int(high)                                   # convert to integer
-                break                                              # exit loop if valid
+        # Take Matrix A size
+        r1, c1 = get_size("A")
 
-            except ValueError:                                     # if conversion fails
-                print("Incorrect input")                           # print error message
+        # Take Matrix B size
+        r2, c2 = get_size("B")
 
-        return np.random.randint(low, high + 1, size=(rows, cols)), rows, cols   # return random matrix
+        # Check both matrices have same size
+        if r1 == r2 and c1 == c2:
 
+            # Stop for loop
+            break
 
-A, r1, c1 = create_matrix("A")                                     # create first matrix A
+        # If sizes are different
+        print("Incorrect input")
 
-B, r2, c2 = create_matrix("B")                                     # create second matrix B
+        # Explain reason
+        print("Both matrices must have same rows and columns")
 
+    # If 3 attempts completed
+    else:
 
-print("\n----- MENU -----")                                        # print menu header
-print("1. Addition")                                               # print option 1
-print("2. Subtraction")                                            # print option 2
-print("3. Multiplication")                                         # print option 3
-print("4. Inverse of Matrix A")                                    # print option 4
-print("5. Inverse of Matrix B")                                    # print option 5
+        # Show message
+        print("Maximum attempts reached")
 
+        # Stop program
+        exit()
 
-try:                                                               # try to get menu choice
-    choice = int(input("Enter your choice: ").strip())            # take choice input
+    # Exit while loop
+    break
 
-except ValueError:                                                 # if conversion fails
-    print("Incorrect input")                                       # print error message
-    exit()                                                         # exit program
+# Create Matrix A
+A = create_matrix("A",r1,c1)
 
+# Create Matrix B
+B = create_matrix("B",r2,c2)
 
-if choice == 1:                                                    # if user chose addition
+# Infinite loop for menu
+while True:
 
-    if A.shape == B.shape:                                         # check if shapes match
-        print("\nAddition Result:")                                # print result header
-        print(A + B)                                              # print addition result
-    else:                                                          # if shapes dont match
-        print("Addition not possible")                            # print error message
-        exit()                                                     # exit program
+    # Display operations
+    print("""
+----- MENU -----
+1. Addition
+2. Subtraction
+3. Multiplication
+4. Inverse A
+5. Inverse B
+6. Exit
+""")
 
+    try:
 
-elif choice == 2:                                                  # if user chose subtraction
+        # Take user choice
+        choice = int(
+            input("Choice: ")
+        )
 
-    if A.shape == B.shape:                                         # check if shapes match
-        print("\nSubtraction Result:")                            # print result header
-        print(A - B)                                              # print subtraction result
-    else:                                                          # if shapes dont match
-        print("Subtraction not possible")                         # print error message
-        exit()                                                     # exit program
+    # If wrong input
+    except ValueError:
 
+        # Display error
+        print("Incorrect input")
 
-elif choice == 3:                                                  # if user chose multiplication
+        # Restart menu
+        continue
 
-    if c1 == r2:                                                   # check multiplication condition
-        print("\nMultiplication Result:")                         # print result header
-        print(np.matmul(A, B))                                    # print multiplication result
-    else:                                                          # if condition not met
-        print("Multiplication not possible")                      # print error message
-        exit()                                                     # exit program
+    # Addition operation
+    if choice == 1:
 
+        # Add matrices
+        print(A + B)
 
-elif choice == 4:                                                  # if user chose inverse of A
+    # Subtraction operation
+    elif choice == 2:
 
-    if r1 == c1:                                                   # check if matrix A is square
-        try:                                                       # try to calculate inverse
-            print("\nInverse of Matrix A:")                       # print result header
-            print(np.round(np.linalg.inv(A), 2))                 # print inverse of A
-        except np.linalg.LinAlgError:                             # if inverse doesnt exist
-            print("Inverse does not exist")                       # print error message
-            exit()                                                 # exit program
-    else:                                                          # if matrix A is not square
-        print("Matrix A is not square")                           # print error message
-        exit()                                                     # exit program
+        # Subtract matrices
+        print(A - B)
 
 
-elif choice == 5:                                                  # if user chose inverse of B
+    # Multiplication operation
+    elif choice == 3:
 
-    if r2 == c2:                                                   # check if matrix B is square
-        try:                                                       # try to calculate inverse
-            print("\nInverse of Matrix B:")                       # print result header
-            print(np.round(np.linalg.inv(B), 2))                 # print inverse of B
-        except np.linalg.LinAlgError:                             # if inverse doesnt exist
-            print("Inverse does not exist")                       # print error message
-            exit()                                                 # exit program
-    else:                                                          # if matrix B is not square
-        print("Matrix B is not square")                           # print error message
-        exit()                                                     # exit program
+        # Check multiplication condition
+        if c1 == r2:
+            # Multiply matrices
+            print(np.matmul(A,B))
 
+        # If multiplication condition fails
+        else:
+            print("Multiplication not possible")
 
-else:                                                              # if invalid menu choice
-    print("Invalid Choice")                                        # print error message
-    exit()                                                         # exit program
+    # Inverse of Matrix A
+    elif choice == 4:
+
+        # Check square matrix
+        if r1 == c1:
+
+            try:
+
+                # Calculate inverse
+                print(np.round(np.linalg.inv(A),2))
+
+            # If inverse does not exist
+            except:
+
+                print(
+                "Inverse does not exist"
+                )
+
+        # If not square
+        else:
+            print("Matrix A not square")
+
+
+    # Inverse of Matrix B
+    elif choice == 5:
+
+        # Check square matrix
+        if r2 == c2:
+
+            try:
+
+                # Calculate inverse
+                print(np.round(np.linalg.inv(B),2))
+
+            # If inverse does not exist
+            except:
+                print("Inverse does not exist")
+
+        # If not square
+        else:
+            print("Matrix B not square")
+
+
+    # Exit option
+    elif choice == 6:
+
+        # Display exit message
+        print("Program exited")
+
+        # Stop menu loop
+        break
+
+    # Invalid menu option
+    else:
+        # Display error
+        print("Invalid choice")
